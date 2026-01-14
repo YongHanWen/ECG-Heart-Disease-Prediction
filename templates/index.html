@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heart Disease Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .hidden { display: none; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input[type="range"] { width: 100%; }
+        select, button { width: 100%; padding: 8px; }
+        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; background: #e9f7ef; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Heart Disease Risk Assessment</h1>
+        
+        <!-- Add ALL form fields (11 total) -->
+        <form id="prediction-form">
+            <!-- Age -->
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="range" id="age" name="age" min="20" max="90" value="45">
+                <span id="age-value">45</span>
+            </div>
+
+            <!-- Sex -->
+            <div class="form-group">
+                <label for="sex">Sex</label>
+                <select id="sex" name="sex">
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+            </div>
+
+            <!-- Chest Pain -->
+            <div class="form-group">
+                <label for="chest_pain">Chest Pain Type</label>
+                <select id="chest_pain" name="chest_pain">
+                    <option value="ASY">ASY</option>
+                    <option value="ATA">ATA</option>
+                    <option value="NAP">NAP</option>
+                    <option value="TA">TA</option>
+                </select>
+            </div>
+
+            <!-- Resting BP -->
+            <div class="form-group">
+                <label for="rbp">Resting BP</label>
+                <input type="range" id="rbp" name="rbp" min="80" max="200" value="130">
+                <span id="rbp-value">130</span>
+            </div>
+
+            <!-- Cholesterol -->
+            <div class="form-group">
+                <label for="chol">Cholesterol</label>
+                <input type="range" id="chol" name="chol" min="100" max="400" value="240">
+                <span id="chol-value">240</span>
+            </div>
+
+            <!-- Fasting BS -->
+            <div class="form-group">
+                <label for="fbs">Fasting BS > 120?</label>
+                <select id="fbs" name="fbs">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+
+            <!-- Resting ECG -->
+            <div class="form-group">
+                <label for="ecg">Resting ECG</label>
+                <select id="ecg" name="ecg">
+                    <option value="LVH">LVH</option>
+                    <option value="Normal">Normal</option>
+                    <option value="ST">ST</option>
+                </select>
+            </div>
+
+            <!-- Max HR -->
+            <div class="form-group">
+                <label for="max_hr">Max Heart Rate</label>
+                <input type="range" id="max_hr" name="max_hr" min="80" max="210" value="150">
+                <span id="max_hr-value">150</span>
+            </div>
+
+            <!-- Exercise Angina -->
+            <div class="form-group">
+                <label for="angina">Exercise Angina</label>
+                <select id="angina" name="angina">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+
+            <!-- Oldpeak -->
+            <div class="form-group">
+                <label for="oldpeak">Oldpeak</label>
+                <input type="range" id="oldpeak" name="oldpeak" min="0" max="6" step="0.1" value="1.0">
+                <span id="oldpeak-value">1.0</span>
+            </div>
+
+            <!-- ST Slope -->
+            <div class="form-group">
+                <label for="st_slope">ST Slope</label>
+                <select id="st_slope" name="st_slope">
+                    <option value="Down">Down</option>
+                    <option value="Flat">Flat</option>
+                    <option value="Up">Up</option>
+                </select>
+            </div>
+
+            <button type="submit">Predict Risk</button>
+        </form>
+
+        <div id="result" class="hidden">
+            <h2>Prediction Results</h2>
+            <p>Probability: <span id="probability">0%</span></p>
+            <p id="risk-level">Submit data to see results</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Update slider displays
+            $('input[type="range"]').on('input', function() {
+                $(this).next('span').text($(this).val());
+            });
+
+            // Form submission
+            $('#prediction-form').submit(function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        age: $('#age').val(),
+                        sex: $('#sex').val(),
+                        chest_pain: $('#chest_pain').val(),
+                        rbp: $('#rbp').val(),
+                        chol: $('#chol').val(),
+                        fbs: $('#fbs').val(),
+                        ecg: $('#ecg').val(),
+                        max_hr: $('#max_hr').val(),
+                        angina: $('#angina').val(),
+                        oldpeak: $('#oldpeak').val(),
+                        st_slope: $('#st_slope').val()
+                    }),
+                    success: function(response) {
+                        $('#probability').text(response.probability);
+                        $('#risk-level').text(response.risk_level);
+                        $('#result').removeClass('hidden');
+                    },
+                    error: function(xhr) {
+                        alert("Error: " + (xhr.responseJSON?.error || "Server error"));
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

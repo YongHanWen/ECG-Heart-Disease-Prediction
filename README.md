@@ -70,8 +70,9 @@ A simple app script allows users to input patient data and returns:
 ---
 
 ## 📁 Repository Structure
-'''├── ecg_heart_disease_prediction.ipynb'''
-'''├── heart_disease_model.pkl'''
+```text
+├── ecg_heart_disease_prediction.ipynb
+├── heart_disease_model.pkl
 ├── Heart Failure prediction datasets.csv
 ├── app.py
 ├── images/

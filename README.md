@@ -2,17 +2,13 @@
 
 A machine learning project that predicts the likelihood of heart disease using **non-invasive, ECG-related clinical features**.
 
-
 ---
-
 
 ## 🩺 Problem Overview
 Heart disease diagnosis often requires invasive tests.  
 This project explores whether **ECG-derived clinical values** can be used to accurately predict heart disease risk.
 
-
 ---
-
 
 ## 📊 Dataset
 - 1,190 patient records
@@ -78,10 +74,9 @@ A simple app script allows users to input patient data and returns:
 ├── ecg_heart_disease_prediction.ipynb
 ├── heart_disease_model.pkl
 ├── Heart Failure prediction datasets.csv
-├── app.py
-├── images/
-├── templates/
-└── docs / slides
+├── app.py / web demo
+├── images/ static/ templates/
+└── slides.pptx
 ```
 
 ---
